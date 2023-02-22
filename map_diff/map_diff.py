@@ -31,20 +31,20 @@ lat = dfile_a.variables['lat']
 diff = file_a-file_b
 
 ## Mapping diff
-cmap_top = int(os.environ['cmap_top'])
-cmap_classes = int(os.environ['cmap_classes'])
-sbounds = np.linspace(-cmap_top,cmap_top,cmap_classes)
-fig = plt.figure(figsize=[8, 8], constrained_layout=True)
+fig = plt.figure(figsize=[16, 16], constrained_layout=True)
 
 ax = fig.add_subplot(1, 1, 1, projection=ccrs.NorthPolarStereo())
 
+# set colorbar limits
+vmax = np.ceil(np.percentile(np.abs(diff.compressed()), 90))
+
 # shade variables
-filled = ax.pcolormesh(lon, lat, diff, cmap='RdBu_r',
-                        transform=ccrs.PlateCarree(), shading='auto', norm=colors.BoundaryNorm(sbounds, 256, extend='both'))
+filled = ax.pcolormesh(lon, lat, diff, cmap='RdBu_r', norm=TwoSlopeNorm(vcenter=0., vmax=vmax, vmin=-vmax),
+                        transform=ccrs.PlateCarree(), shading='auto')
 # extent map
 ax.set_extent([-180, 180, 90, 57], ccrs.PlateCarree())
 
-ax.set_title(os.environ['run_name_a'] + " - " + os.environ['run_name_b'])
+ax.set_title(os.environ['run_name_a'] + " - " + os.environ['run_name_b'], fontsize=16)
 
 # draw land and ocean
 ax.add_feature(cartopy.feature.OCEAN)
@@ -62,11 +62,9 @@ ax.set_boundary(circle, transform=ax.transAxes)
 gl = ax.gridlines(draw_labels=True)
 
 # legend
-cbar = fig.colorbar(filled, boundaries=sbounds, extend='both', fraction=0.05)
-cbar.set_label(os.environ['legendtitle'], rotation=-90, labelpad=13)
+cbar = fig.colorbar(filled, extend='both', fraction=0.05)
+cbar.set_label(os.environ['legendtitle'], rotation=-90, labelpad=13, fontsize=16)
 
 plot_name = output_dir + variable + "." + os.environ['month'] + ".diff." + os.environ['run_name_a'] + "-" + os.environ['run_name_b']
-plt.savefig(plot_name +'.pdf', format='pdf', bbox_inches='tight')
+plt.savefig(plot_name +'.png', format='png', bbox_inches='tight')
 plt.close()
-
-print("diff map: done!")
