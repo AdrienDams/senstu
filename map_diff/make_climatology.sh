@@ -19,7 +19,13 @@ for month in {01..12}; do
 	fi
 	# Select variable for 3D
 	if [ "$dimension" = "3D" ]; then
-		ncea -O -F -d $levelname,$depth -v $variable $input_dir/*.{1980..1985}-$month.nc $output_dir/$run_name.$variable.$month.nc
+		if [ "$depthavg" = "yes" ]; then
+			ncea -O -F -v $variable $input_dir/*.{1980..1985}-$month.nc $output_dir/$run_name.$variable.$month.tmp.nc
+			ncwa -O -F -a $levelname,$topdepth,$depth -v $variable $output_dir/$run_name.$variable.$month.tmp.nc $output_dir/$run_name.$variable.$month.nc
+		fi
+		if [ "$depthavg" = "no" ]; then
+			ncea -O -F -d $levelname,$depth -v $variable $input_dir/*.{1980..1985}-$month.nc $output_dir/$run_name.$variable.$month.nc
+		fi
 	fi
 	
 	# Regrid model

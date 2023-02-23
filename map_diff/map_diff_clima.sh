@@ -4,20 +4,26 @@
 export run_name_a="57_DOM02_001" # default run
 export run_name_b="57_DOM02_043"
 #(need to change period on make_climatology.sh line 18 or 22)
-export variable="SNOW_DEPTH"
-export dimension="2D"
+export variable="H2OSOI"
+
+export dimension="3D"
+export levelname="levsoi" # levsoi or levgrnd
 export depth_a=9
 export depth_b=8
-export levelname="levgrnd"
-#export legendtitle="soil temperature difference at 1m in °C"
-export legendtitle="snow difference in m"
+export depthavg="yes" # yes or no
+export topdepth_a=1 # if depthavg is yes
+export topdepth_b=1 # if depthavg is yes
+
+export legendtitle="column soil liquid water difference in kg/m3" # snow difference in m soil temperature difference at 1m in °C
 
 echo "Make climatology averages"
 export run_name=$run_name_a
 export depth=$depth_a
+export topdepth=$topdepth_a
 $senstu/map_diff/make_climatology.sh
 export run_name=$run_name_b
 export depth=$depth_b
+export topdepth=$topdepth_b
 $senstu/map_diff/make_climatology.sh
 
 echo "Map climatology averages"
