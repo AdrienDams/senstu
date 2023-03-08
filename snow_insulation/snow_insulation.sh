@@ -1,8 +1,9 @@
 #!/bin/bash
 #SBATCH --partition=shared
-#SBATCH --ntasks=2
+#SBATCH --ntasks=1
 #SBATCH --time=08:00:00
 #SBATCH --account=aa0049
+#SBATCH --mem-per-cpu=100G
 
 export run_name_a="57_DOM02_001" # default run
 export run_name_b="57_DOM02_043"
@@ -25,3 +26,5 @@ ncrcat -O -v $vars $folder_b/$run_name_b.clm2.h0.????-02-??.ext.nc $scratch_dir/
 ncrcat -O -v $vars $folder_b/$run_name_b.clm2.h0.????-12-??.ext.nc $scratch_dir/snow_insulation/$run_name_b.12.nc
 
 ncrcat -O -v $vars $scratch_dir/snow_insulation/$run_name_b.??.nc $scratch_dir/snow_insulation/$run_name_b.nc
+
+python snow_insulation.py
