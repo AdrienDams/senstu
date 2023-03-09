@@ -20,8 +20,8 @@ ds_b = xr.open_dataset(folder + os.environ['run_name_b'] + ".nc")
 
 tsa_a = ds_a["TSA"][:,stations].values-zero_abs
 tsa_b = ds_b["TSA"][:,stations].values-zero_abs
-tsoi_a = ds_a["TSOI"][:,2,stations].values-zero_abs # 2 = take at 9 cm
-tsoi_b = ds_b["TSOI"][:,3,stations].values-zero_abs # 3 = take at 11 cm (for CLM45 run)
+tsoi_a = ds_a["TSOI"][:,3,stations].values-zero_abs # 3 = take at 16 cm
+tsoi_b = ds_b["TSOI"][:,4,stations].values-zero_abs # 4 = take at 21 cm (for CLM45 run)
 snow_a = ds_a["SNOW_DEPTH"][:,stations].values
 snow_b = ds_b["SNOW_DEPTH"][:,stations].values
 snow_a = snow_a[:,:]*100 # convert into cm
@@ -34,8 +34,8 @@ winter_offset_a = tsoi_a[:,:] - tsa_a[:,:]
 winter_offset_b = tsoi_b[:,:] - tsa_b[:,:]
 
 # Define the snow bin edges
-snow_bin_edges = np.arange(0, 101, 10)
-snow_bins = np.arange(5,96,10)
+snow_bin_edges = np.arange(0, 101, 5)
+snow_bins = np.arange(5,96,5)
 
 # Define the air temperature regimes
 tsa_edges = [float('-inf'), -25, -15, -5]
