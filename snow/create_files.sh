@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# need to run /work/aa0049/a271098/cegio/postproc/create_winter.sh before
+
 modelinput_dir=$cegio/data/$run_name/monthly
 modeloutput_dir=$cegio/data/$run_name/monthly/snow_depth/
 variable=SNOW_DEPTH
@@ -29,8 +31,15 @@ ncks -O -F -d lat,0.,90. $modelinput_dir/remap.$variable.tmp.nc $modelinput_dir/
 
 # winter
 variable=TSOI
-# Extract good dimension
-ncks -O -F -d levgrnd,4 $modelinput_dir/winter_avg.nc $modelinput_dir/winter_avg.1d.nc
+# Extract good dimension for 1m
+#ncks -O -F -d levgrnd,8 $modelinput_dir/winter_avg.nc $modelinput_dir/winter_avg.1d.nc # 8 for CLM45 9 for CLM5
+# Extract good dimension for 20cm
+# CLM45
+#ncks -O -F -d levgrnd,5 $modelinput_dir/winter_avg.nc $modelinput_dir/winter_avg.1d.nc
+# CLM5
+ncks -O -F -d levgrnd,4 $modelinput_dir/winter_avg.nc $modelinput_dir/winter_avg.1d.top.nc # 16 cm 
+ncks -O -F -d levgrnd,5 $modelinput_dir/winter_avg.nc $modelinput_dir/winter_avg.1d.bot.nc # 26 cm
+ncflint -O -w 0.6,0.4 $modelinput_dir/winter_avg.1d.top.nc $modelinput_dir/winter_avg.1d.bot.nc $modelinput_dir/winter_avg.1d.nc
 # Regrid model
 cdo -r setgrid,$descriptiongrid -selvar,$variable $modelinput_dir/winter_avg.1d.nc $modelinput_dir/grid.$variable.tmp.nc
 # Remap model

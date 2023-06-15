@@ -9,7 +9,7 @@ import cartopy.crs as ccrs
 import os
 import sys
 
-variable = os.environ['variable']
+variable = "SOILWAT"
 
 # output
 output_dir = os.environ['senstu'] + "/figures/map_diff/" + variable + "/"
@@ -17,15 +17,31 @@ os.makedirs(output_dir, exist_ok=True)
 
 # open files and extract variables
 
-file_a = sys.argv[1]
-file_b = sys.argv[2]
-dfile_a = nc.Dataset(file_a, 'r') # read only
-dfile_b = nc.Dataset(file_b, 'r') # read only
+# Soil ice
+file_a1 = os.environ['senstu'] + "/data/" + os.environ['run_name_a'] + "/climatology/remap/remap." \
+		+ os.environ['run_name_a'] + ".SOILICE." + os.environ['month'] + ".nc"
+file_b1 = os.environ['senstu'] + "/data/" + os.environ['run_name_b'] + "/climatology/remap/remap." \
+		+ os.environ['run_name_b'] + ".SOILICE." + os.environ['month'] + ".nc"
+dfile_a1 = nc.Dataset(file_a1, 'r') # read only
+dfile_b1 = nc.Dataset(file_b1, 'r') # read only
+file_a1 = dfile_a1.variables["SOILICE"][0,:,:] # remove useless dimension
+file_b1 = dfile_b1.variables["SOILICE"][0,:,:] # remove useless dimension
 
-file_a = dfile_a.variables[variable][0,:,:] # remove useless dimension
-file_b = dfile_b.variables[variable][0,:,:] # remove useless dimension
-lon = dfile_a.variables['lon']
-lat = dfile_a.variables['lat']
+# Soil liq
+file_a2 = os.environ['senstu'] + "/data/" + os.environ['run_name_a'] + "/climatology/remap/remap." \
+		+ os.environ['run_name_a'] + ".SOILLIQ." + os.environ['month'] + ".nc"
+file_b2 = os.environ['senstu'] + "/data/" + os.environ['run_name_b'] + "/climatology/remap/remap." \
+		+ os.environ['run_name_b'] + ".SOILLIQ." + os.environ['month'] + ".nc"
+dfile_a2 = nc.Dataset(file_a2, 'r') # read only
+dfile_b2 = nc.Dataset(file_b2, 'r') # read only
+file_a2 = dfile_a2.variables["SOILLIQ"][0,:,:] # remove useless dimension
+file_b2 = dfile_b2.variables["SOILLIQ"][0,:,:] # remove useless dimension
+
+file_a = file_a1 + file_a2
+file_b = file_b1 + file_b2
+
+lon = dfile_a1.variables['lon']
+lat = dfile_a1.variables['lat']
 
 # make diff
 diff = file_a-file_b
@@ -36,7 +52,7 @@ fig = plt.figure(figsize=[10, 10], constrained_layout=True)
 ax = fig.add_subplot(1, 1, 1, projection=ccrs.NorthPolarStereo())
 
 # set colorbar limits
-vmax = 0.4#np.ceil(np.percentile(np.abs(diff.compressed()), 90))
+vmax = np.ceil(np.percentile(np.abs(diff.compressed()), 90))
 
 # shade variables
 filled = ax.pcolormesh(lon, lat, diff, cmap='RdBu_r', norm=TwoSlopeNorm(vcenter=0., vmax=vmax, vmin=-vmax),
@@ -63,7 +79,7 @@ gl = ax.gridlines(draw_labels=True)
 
 # legend
 cbar = fig.colorbar(filled, extend='both', fraction=0.05)
-cbar.set_label(os.environ['legendtitle'], rotation=-90, labelpad=13, fontsize=16)
+cbar.set_label("1m-column soil liquid + ice water difference in kg/m2", rotation=-90, labelpad=13, fontsize=16)
 
 plot_name = output_dir + variable + "." + os.environ['month'] + ".diff." + os.environ['run_name_a'] + "-" + os.environ['run_name_b']
 plt.savefig(plot_name +'.png', format='png', bbox_inches='tight')

@@ -11,6 +11,8 @@ import sys
 
 variable = "SNOW_DEPTH"
 folder = os.environ['cegio'] + "/data/" + os.environ['run_name'] + "/monthly/snow_depth/"
+output_dir = os.environ['senstu'] + "/figures/effective_snow/"
+os.makedirs(output_dir, exist_ok=True)
 
 ctsmfile = folder + "SNOW_DEPTH.remap.period.10.nc" # october is first one
 dctsm = nc.Dataset(ctsmfile, 'r') # read only
@@ -64,4 +66,6 @@ gl = ax.gridlines(draw_labels=True)
 cbar = fig.colorbar(filled, boundaries=sbounds, extend='max')
 cbar.set_label(r"effective snow", rotation=-90, labelpad=13)
 
-plt.show()
+plot_name = output_dir + "effective_snow." + os.environ['run_name']
+plt.savefig(plot_name +'.png', format='png', bbox_inches='tight')
+plt.close()

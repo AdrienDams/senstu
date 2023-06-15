@@ -8,6 +8,8 @@ import os
 import sys
 
 folder = os.environ['scratch_dir'] + "/snow_insulation/"
+output_dir = os.environ['senstu'] + "/figures/snow_insulation/"
+os.makedirs(output_dir, exist_ok=True)
 zero_abs = 273.15
 
 # select stations
@@ -21,7 +23,7 @@ ds_b = xr.open_dataset(folder + os.environ['run_name_b'] + ".nc")
 tsa_a = ds_a["TSA"][:,stations].values-zero_abs
 tsa_b = ds_b["TSA"][:,stations].values-zero_abs
 tsoi_a = ds_a["TSOI"][:,3,stations].values-zero_abs # 3 = take at 16 cm
-tsoi_b = ds_b["TSOI"][:,4,stations].values-zero_abs # 4 = take at 21 cm (for CLM45 run)
+tsoi_b = ds_b["TSOI"][:,3,stations].values-zero_abs # 4 = take at 21 cm (for CLM45 run)
 snow_a = ds_a["SNOW_DEPTH"][:,stations].values
 snow_b = ds_b["SNOW_DEPTH"][:,stations].values
 snow_a = snow_a[:,:]*100 # convert into cm
@@ -81,5 +83,6 @@ ax2.set_title(str(os.environ['run_name_b']))
 ax1.set_ylim([0, 30])
 ax2.set_ylim([0, 30])
 
-# show plot
-plt.show()
+plot_name = output_dir + "snow_insulation.diff." + os.environ['run_name_a'] + "-" + os.environ['run_name_b']
+plt.savefig(plot_name +'.png', format='png', bbox_inches='tight')
+plt.close()

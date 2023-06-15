@@ -9,8 +9,9 @@ import cartopy.crs as ccrs
 import os
 import sys
 
-variable = "SNOW_DEPTH"
 folder = os.environ['cegio'] + "/data/" + os.environ['run_name'] + "/monthly/"
+output_dir = os.environ['senstu'] + "/figures/winter_offset/"
+os.makedirs(output_dir, exist_ok=True)
 
 # open files and extract variables
 
@@ -28,7 +29,7 @@ lat = dtsa.variables['lat']
 w_offset = tsoi-tsa
 
 ## Mapping diff
-sbounds = np.linspace(0,25,11)
+sbounds = np.linspace(10,35,11)
 fig = plt.figure(figsize=[8, 8], constrained_layout=True)
 
 ax = fig.add_subplot(1, 1, 1, projection=ccrs.NorthPolarStereo())
@@ -55,7 +56,9 @@ ax.set_boundary(circle, transform=ax.transAxes)
 gl = ax.gridlines(draw_labels=True)
 
 # legend
-cbar = fig.colorbar(filled, boundaries=sbounds, extend='max')
-cbar.set_label(r"winter offset in C", rotation=-90, labelpad=13)
+cbar = fig.colorbar(filled, boundaries=sbounds)#, extend='max')
+cbar.set_label(r"Winter offset in C", rotation=-90, labelpad=13)
 
-plt.show()
+plot_name = output_dir + "winter_offset." + os.environ['run_name']
+plt.savefig(plot_name +'.png', format='png', bbox_inches='tight')
+plt.close()

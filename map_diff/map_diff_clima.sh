@@ -1,20 +1,24 @@
 #!/bin/bash
 
 # What user need to change
-export run_name_a="57_DOM02_001" # default run
-export run_name_b="57_DOM02_043"
-#(need to change period on make_climatology.sh line 18 or 22)
-export variable="H2OSOI"
+export run_name_a="57_DOM02_047" 
+export run_name_b="57_DOM02_001" # default run
+#(need to change period on make_climatology.sh line 18, 24, 28, 33)
+export variable="SNOW_DEPTH"
 
-export dimension="3D"
-export levelname="levsoi" # levsoi or levgrnd
+export dimension="2D"
+export levelname="levgrnd" # levsoi or levgrnd
 export depth_a=9
-export depth_b=8
-export depthavg="yes" # yes or no
+export depth_b=9
+export depthavg="no" # yes or no
+export sum="no" # yes or no
 export topdepth_a=1 # if depthavg is yes
 export topdepth_b=1 # if depthavg is yes
 
-export legendtitle="column soil liquid water difference in kg/m3" # snow difference in m soil temperature difference at 1m in °C
+# 1m-column soil liquid + ice water difference in kg/m2
+# snow difference in m soil temperature difference at 1m (in °C) Temperature at 2m (in °C)
+# 1m-column volumetric soil water difference (in mm3/mm3)
+export legendtitle="snow difference in m" 
 
 echo "Make climatology averages"
 export run_name=$run_name_a
@@ -26,7 +30,7 @@ export depth=$depth_b
 export topdepth=$topdepth_b
 $senstu/map_diff/make_climatology.sh
 
-echo "Map climatology averages"
+echo "Map climatology monthly averages"
 for i in {01..12}; do
 	export month=$i
 	echo $month
@@ -36,3 +40,24 @@ for i in {01..12}; do
 
 	python $senstu/map_diff/map_diff.py $file_a $file_b
 done
+
+echo "Map climatology season averages"
+for season in DJF MAM JJA SON; do
+	export month=$season
+	echo $season
+	
+	file_a=$senstu/data/$run_name_a/climatology/remap/remap.$run_name_a.$variable.$season.nc
+	file_b=$senstu/data/$run_name_b/climatology/remap/remap.$run_name_b.$variable.$season.nc
+	
+	# Calculate map difference
+	python $senstu/map_diff/map_diff.py $file_a $file_b
+done
+
+echo "Map climatology year average"
+export month="period"
+
+file_a=$senstu/data/$run_name_a/climatology/remap/remap.$run_name_a.$variable.period.nc
+file_b=$senstu/data/$run_name_b/climatology/remap/remap.$run_name_b.$variable.period.nc
+
+# Calculate map difference
+python $senstu/map_diff/map_diff.py $file_a $file_b
