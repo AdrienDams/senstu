@@ -35,11 +35,11 @@ variable=TSOI
 #ncks -O -F -d levgrnd,8 $modelinput_dir/winter_avg.nc $modelinput_dir/winter_avg.1d.nc # 8 for CLM45 9 for CLM5
 # Extract good dimension for 20cm
 # CLM45
-#ncks -O -F -d levgrnd,5 $modelinput_dir/winter_avg.nc $modelinput_dir/winter_avg.1d.nc
+ncks -O -F -d levgrnd,5 $modelinput_dir/winter_avg.nc $modelinput_dir/winter_avg.1d.nc
 # CLM5
-ncks -O -F -d levgrnd,4 $modelinput_dir/winter_avg.nc $modelinput_dir/winter_avg.1d.top.nc # 16 cm 
-ncks -O -F -d levgrnd,5 $modelinput_dir/winter_avg.nc $modelinput_dir/winter_avg.1d.bot.nc # 26 cm
-ncflint -O -w 0.6,0.4 $modelinput_dir/winter_avg.1d.top.nc $modelinput_dir/winter_avg.1d.bot.nc $modelinput_dir/winter_avg.1d.nc
+#ncks -O -F -d levgrnd,4 $modelinput_dir/winter_avg.nc $modelinput_dir/winter_avg.1d.top.nc # 16 cm 
+#ncks -O -F -d levgrnd,5 $modelinput_dir/winter_avg.nc $modelinput_dir/winter_avg.1d.bot.nc # 26 cm
+#ncflint -O -w 0.6,0.4 $modelinput_dir/winter_avg.1d.top.nc $modelinput_dir/winter_avg.1d.bot.nc $modelinput_dir/winter_avg.1d.nc
 # Regrid model
 cdo -r setgrid,$descriptiongrid -selvar,$variable $modelinput_dir/winter_avg.1d.nc $modelinput_dir/grid.$variable.tmp.nc
 # Remap model
