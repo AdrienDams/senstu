@@ -1,3 +1,4 @@
+# Make wenli graph
 import numpy as np
 import xarray as xr
 import matplotlib.pyplot as plt
@@ -14,7 +15,7 @@ zero_abs = 273.15
 
 # select stations
 index_table = np.genfromtxt(os.environ['cegio'] + "/evaluation/stations/stations_ctsm_indexes.txt", delimiter=" ", dtype=int)
-stations = np.argsort(index_table[:,0])
+stations = index_table[:,1]
 
 # open files and extract variables
 ds_a = xr.open_dataset(folder + os.environ['run_name_a'] + ".nc")
@@ -22,8 +23,8 @@ ds_b = xr.open_dataset(folder + os.environ['run_name_b'] + ".nc")
 
 tsa_a = ds_a["TSA"][:,stations].values-zero_abs
 tsa_b = ds_b["TSA"][:,stations].values-zero_abs
-tsoi_a = ds_a["TSOI"][:,3,stations].values-zero_abs # 3 = take at 16 cm
-tsoi_b = ds_b["TSOI"][:,3,stations].values-zero_abs # 4 = take at 21 cm (for CLM45 run)
+tsoi_a = ds_a["TSOI"][:,4,stations].values-zero_abs # 3 = take at 16 cm
+tsoi_b = ds_b["TSOI"][:,4,stations].values-zero_abs # 4 = take at 21 cm (for CLM45 run)
 snow_a = ds_a["SNOW_DEPTH"][:,stations].values
 snow_b = ds_b["SNOW_DEPTH"][:,stations].values
 snow_a = snow_a[:,:]*100 # convert into cm
@@ -50,6 +51,7 @@ fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10,5))
 for i in range(len(tsa_labels)):
     # filter data based on air temperature regime
     idx_a = np.where((tsa_a > tsa_edges[i]) & (tsa_a <= tsa_edges[i+1]))[0]
+    print(idx_a) # is this wrong?
     idx_b = np.where((tsa_b > tsa_edges[i]) & (tsa_b <= tsa_edges[i+1]))[0]
 
     # calculate winter offset mean and standard deviation for each snow bin
@@ -57,11 +59,12 @@ for i in range(len(tsa_labels)):
     winter_offset_mean_b = np.zeros(np.size(snow_bins))
     winter_offset_std_a = np.zeros(np.size(snow_bins))
     winter_offset_std_b = np.zeros(np.size(snow_bins))
+
     for j in range(0, len(snow_bins)):
         winter_offset_mean_a[j] = np.nanmean(winter_offset_a[idx_a][(snow_a[idx_a]>=snow_bin_edges[j]) & (snow_a[idx_a]<snow_bin_edges[j+1])])
         winter_offset_mean_b[j] = np.nanmean(winter_offset_b[idx_b][(snow_b[idx_b]>=snow_bin_edges[j]) & (snow_b[idx_b]<snow_bin_edges[j+1])])
-        winter_offset_std_a[j] = np.nanstd(winter_offset_a[idx_a][(snow_a[idx_a]>=snow_bin_edges[j]) & (snow_a[idx_a] < snow_bin_edges[j+1])])
-        winter_offset_std_b[j] = np.nanstd(winter_offset_b[idx_b][(snow_b[idx_b]>=snow_bin_edges[j]) & (snow_b[idx_b] < snow_bin_edges[j+1])])
+        winter_offset_std_a[j] = np.nanstd(winter_offset_a[idx_a][(snow_a[idx_a]>=snow_bin_edges[j]) & (snow_a[idx_a]<snow_bin_edges[j+1])])/2
+        winter_offset_std_b[j] = np.nanstd(winter_offset_b[idx_b][(snow_b[idx_b]>=snow_bin_edges[j]) & (snow_b[idx_b]<snow_bin_edges[j+1])])/2
 
     # plot scatter and errorbars for each snow bin
     ax1.scatter(snow_bins, winter_offset_mean_a, color=tsa_colors[i], linewidth=2, label=tsa_labels[i])
