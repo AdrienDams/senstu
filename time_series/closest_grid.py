@@ -7,7 +7,8 @@ dataset = nc.Dataset(file_path, 'r')
 
 # Read latitude and longitude variables
 lat = dataset.variables['lat'][:]
-lon = dataset.variables['lon'][:]
+lon_360 = dataset.variables['lon'][:]
+lon = np.where(lon_360 > 180, lon_360 - 360, lon_360)
 
 # Target coordinates
 target_lat = 72.369555
