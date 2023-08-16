@@ -60,5 +60,5 @@ cbar = fig.colorbar(filled, boundaries=sbounds)#, extend='max')
 cbar.set_label(r"Winter offset in C", rotation=-90, labelpad=13)
 
 plot_name = output_dir + "winter_offset." + os.environ['run_name']
-plt.savefig(plot_name +'.png', format='png', bbox_inches='tight')
+plt.savefig(plot_name +'.png', format='png', bbox_inches='tight', dpi=300)
 plt.close()

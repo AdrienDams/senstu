@@ -91,10 +91,10 @@ for i, depth in enumerate(depths_to_extract):
 	axs[i].plot(range(1, 13), obs_avg[:, i], color=obs_color, label='Observations')
 
 	# Plot the control data
-	axs[i].plot(range(1, 13), ctrl_avg[:, i], color=ctrl_color, label='Control')
+	axs[i].plot(range(1, 13), ctrl_avg[:, i], color=ctrl_color, label='Control run')
 
 	# Plot the experiment data
-	axs[i].plot(range(1, 13), exp_avg[:, i], color=exp_color, label='Experiment')
+	axs[i].plot(range(1, 13), exp_avg[:, i], color=exp_color, label='Obu run')
 
 	# Plot the standard deviation for each dataset using fill_between
 	#axs[i].fill_between(range(1, 13), obs_avg[:, i] - obs_std[:, i]/2, obs_avg[:, i] + obs_std[:, i]/2, alpha=0.2, color=obs_color)
@@ -122,6 +122,6 @@ fig.suptitle('Monthly soil temperature in °C', fontsize=12, y=0.9)
 output_dir = os.environ['senstu'] + "/figures/annual_cycle/"
 os.makedirs(output_dir, exist_ok=True)
 plot_name = output_dir + "annual_cycle." + os.environ['run_name_ctrl'] + "-" + os.environ['run_name_exp']
-plt.savefig(plot_name +'.png', format='png', bbox_inches='tight')
+plt.savefig(plot_name +'.png', format='png', bbox_inches='tight', dpi=300)
 plt.close()
 

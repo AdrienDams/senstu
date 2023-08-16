@@ -87,5 +87,5 @@ ax1.set_ylim([0, 30])
 ax2.set_ylim([0, 30])
 
 plot_name = output_dir + "snow_insulation.diff." + os.environ['run_name_a'] + "-" + os.environ['run_name_b']
-plt.savefig(plot_name +'.png', format='png', bbox_inches='tight')
+plt.savefig(plot_name +'.png', format='png', bbox_inches='tight', dpi=300)
 plt.close()

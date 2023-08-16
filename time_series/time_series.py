@@ -111,6 +111,6 @@ plt.subplots_adjust(hspace=0)
 
 # show and save the plot
 plot_name = output_dir + loc + "." + var1 + var2 + var3 + "." + os.environ['year'] + ".time_series." + os.environ['run_name_a'] + "-" + os.environ['run_name_b']
-plt.savefig(plot_name +'.png', format='png', bbox_inches='tight')
+plt.savefig(plot_name +'.png', format='png', bbox_inches='tight', dpi=300)
 plt.close()
 

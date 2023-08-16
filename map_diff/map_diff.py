@@ -77,6 +77,6 @@ cbar = fig.colorbar(filled, extend='both', fraction=0.05)
 cbar.set_label(os.environ['legendtitle'], rotation=-90, labelpad=13, fontsize=16)
 
 plot_name = output_dir + variable + "." + os.environ['month'] + ".diff." + os.environ['run_name_a'] + "-" + os.environ['run_name_b']
-plt.savefig(plot_name +'.png', format='png', bbox_inches='tight')
+plt.savefig(plot_name +'.png', format='png', bbox_inches='tight', dpi=300)
 plt.close()
 
