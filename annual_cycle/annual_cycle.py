@@ -97,12 +97,15 @@ for i, depth in enumerate(depths_to_extract):
 	axs[i].plot(range(1, 13), exp_avg[:, i], color=exp_color, label='Obu run')
 
 	# Plot the standard deviation for each dataset using fill_between
-	#axs[i].fill_between(range(1, 13), obs_avg[:, i] - obs_std[:, i]/2, obs_avg[:, i] + obs_std[:, i]/2, alpha=0.2, color=obs_color)
-	#axs[i].fill_between(range(1, 13), ctrl_avg[:, i] - ctrl_std[:, i]/2, ctrl_avg[:, i] + ctrl_std[:, i]/2, alpha=0.2, color=ctrl_color)
-	#axs[i].fill_between(range(1, 13), exp_avg[:, i] - exp_std[:, i]/2, exp_avg[:, i] + exp_std[:, i]/2, alpha=0.2, color=exp_color)
+	axs[i].fill_between(range(1, 13), obs_avg[:, i] - obs_std[:, i]/2, obs_avg[:, i] + obs_std[:, i]/2, alpha=0.1, color=obs_color)
+	axs[i].fill_between(range(1, 13), ctrl_avg[:, i] - ctrl_std[:, i]/2, ctrl_avg[:, i] + ctrl_std[:, i]/2, alpha=0.1, color=ctrl_color)
+	axs[i].fill_between(range(1, 13), exp_avg[:, i] - exp_std[:, i]/2, exp_avg[:, i] + exp_std[:, i]/2, alpha=0.1, color=exp_color)
 
 	# Add axis labels and title for each subplot
 	axs[i].text(-0.2, 4, f'-{depth} cm', rotation=90, verticalalignment='center', fontsize=10)
+
+	# Fix y-axis
+	axs[i].set_ylim(-9, 17)
 
 	# Add y-ticks and tick options
 	loc = plticker.MultipleLocator(base=4.0) # this locator puts ticks at regular intervals
@@ -124,4 +127,3 @@ os.makedirs(output_dir, exist_ok=True)
 plot_name = output_dir + "annual_cycle." + os.environ['run_name_ctrl'] + "-" + os.environ['run_name_exp']
 plt.savefig(plot_name +'.png', format='png', bbox_inches='tight', dpi=300)
 plt.close()
-
