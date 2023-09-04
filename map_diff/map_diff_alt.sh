@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # What user need to change
-export run_name_a="57_DOM02_005" # default run
-export run_name_b="57_DOM02_001"
+export run_name_a="57_DOM02_051"
+export run_name_b="57_DOM02_001" # control run
 
 export month="period"
 export variable="ALT"

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # What user need to change
-export run_name_a="57_DOM02_047" 
-export run_name_b="57_DOM02_001" # default run
+export run_name_a="57_DOM02_051" 
+export run_name_b="57_DOM02_001" # control run
 #(need to change period on make_climatology.sh line 18, 24, 28, 33)
 export variable="TSOI"
 
